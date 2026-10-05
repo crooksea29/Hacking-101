@@ -6,198 +6,271 @@
     <title>The Official Hacking Game</title>
     <style>
         :root {
-            --bg-color: #121212;
-            --text-color: #00ff00;
-            --accent-color: #1e1e1e;
-            --border-color: #00ff00;
+            --bg-color: #0d1117;
+            --text-color: #58a6ff;
+            --card-bg: #161b22;
+            --accent-color: #238636;
+            --error-color: #da3633;
+        }
+
+        body.custom-theme {
+            --bg-color: var(--user-bg, #0d1117);
+            --card-bg: var(--user-card, #161b22);
+            --text-color: var(--user-text, #58a6ff);
         }
 
         body {
+            font-family: 'Courier New', Courier, monospace;
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
+            padding: 2rem;
             transition: background-color 0.3s, color 0.3s;
         }
 
         .container {
-            background-color: var(--accent-color);
-            border: 2px solid var(--border-color);
+            max-width: 650px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2ea44f;
+            border-bottom: 2px solid #30363d;
+            padding-bottom: 1rem;
+            margin-top: 0;
+        }
+
+        .customizer-box {
+            display: flex;
+            gap: 1rem;
+            background: rgba(255,255,255,0.05);
+            padding: 1rem;
             border-radius: 8px;
-            padding: 20px;
-            width: 400px;
-            max-width: 90%;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
         }
 
-        .settings {
+        .control-group {
+            flex: 1;
+            min-width: 120px;
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            font-size: 0.8rem;
+            flex-direction: column;
+            gap: 0.4rem;
         }
 
-        .settings label {
-            margin-right: 5px;
+        label {
+            font-size: 0.85rem;
+            font-weight: bold;
         }
 
-        #game-output {
+        input[type="color"] {
+            width: 100%;
+            height: 35px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .terminal {
+            background: #010409;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #30363d;
             height: 250px;
+            margin-bottom: 1.5rem;
             overflow-y: auto;
-            border: 1px dashed var(--border-color);
-            padding: 10px;
-            margin-bottom: 15px;
-            white-space: pre-wrap;
-            font-size: 0.9rem;
         }
 
-        .input-area {
+        .game-input-area {
             display: flex;
-            gap: 10px;
+            gap: 0.5rem;
         }
 
         input[type="text"] {
-            flex-grow: 1;
-            background: #000;
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            padding: 8px;
+            flex: 1;
+            padding: 0.8rem;
+            background: #010409;
+            border: 1px solid #30363d;
+            color: inherit;
             font-family: inherit;
+            font-size: 1rem;
+            border-radius: 6px;
         }
 
-        button {
-            background: var(--text-color);
-            color: var(--bg-color);
+        .btn {
+            padding: 0.8rem 1.5rem;
+            color: #ffffff;
             border: none;
-            padding: 8px 15px;
-            font-weight: bold;
-            cursor: pointer;
             font-family: inherit;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
         }
 
-        button:hover {
-            opacity: 0.8;
+        #submit-btn {
+            background-color: var(--accent-color);
         }
+
+        #reset-btn {
+            background-color: #21262d;
+            border: 1px solid #30363d;
+        }
+
+        #reset-btn:hover {
+            background-color: #30363d;
+        }
+
+        button:disabled, input:disabled {
+            background-color: #21262d !important;
+            color: #8b949e !important;
+            cursor: not-allowed;
+        }
+
+        .log-entry {
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
+        .error-text { color: var(--error-color); }
+        .success-text { color: #2ea44f; font-weight: bold; }
+        .system-text { color: #8b949e; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Color Scheme Adjustments -->
-        <div class="settings">
-            <div>
-                <label for="bgPicker">BG:</label>
-                <input type="color" id="bgPicker" value="#121212">
+        <h1>The Hacking Game 101</h1>
+
+        <!-- Customization Controls -->
+        <div class="customizer-box">
+            <div class="control-group">
+                <label>Background</label>
+                <input type="color" id="bg-picker" value="#0d1117" oninput="changeThemeColor('--user-bg', this.value)">
             </div>
-            <div>
-                <label for="textPicker">Text:</label>
-                <input type="color" id="textPicker" value="#00ff00">
+            <div class="control-group">
+                <label>Terminal Box</label>
+                <input type="color" id="card-picker" value="#161b22" oninput="changeThemeColor('--user-card', this.value)">
             </div>
-            <div>
-                <label for="cardPicker">Card:</label>
-                <input type="color" id="cardPicker" value="#1e1e1e">
+            <div class="control-group">
+                <label>Text Scheme</label>
+                <input type="color" id="text-picker" value="#58a6ff" oninput="changeThemeColor('--user-text', this.value)">
             </div>
         </div>
 
-        <h2 style="text-align: center; margin-top: 0;">#The Official Hacking Game#</h2>
-        
-        <div id="game-output"></div>
+        <!-- Terminal Output Window -->
+        <div class="terminal" id="terminal-output"></div>
 
-        <div class="input-area">
-            <input type="text" id="guessInput" placeholder="Guess the password..." autofocus>
-            <button id="submitBtn" onclick="makeGuess()">Guess</button>
+        <!-- Game Input Form -->
+        <div class="game-input-area">
+            <input type="text" id="game-input" placeholder="Guess the password..." onkeydown="if(event.key === 'Enter') processGuess()">
+            <button id="submit-btn" class="btn" onclick="processGuess()">Submit</button>
+            <button id="reset-btn" class="btn" onclick="initGame()">Reset</button>
         </div>
     </div>
 
     <script>
         let attemptNum = 5;
-        const secretWord = "yeet";
-        const outputDiv = document.getElementById("game-output");
-        const guessInput = document.getElementById("guessInput");
-        const submitBtn = document.getElementById("submitBtn");
+        const terminal = document.getElementById('terminal-output');
+        const gameInput = document.getElementById('game-input');
+        const submitBtn = document.getElementById('submit-btn');
 
-        // Customization Listeners
-        document.getElementById("bgPicker").addEventListener("input", (e) => {
-            document.documentElement.style.setProperty('--bg-color', e.target.value);
-        });
-        document.getElementById("textPicker").addEventListener("input", (e) => {
-            document.documentElement.style.setProperty('--text-color', e.target.value);
-            document.documentElement.style.setProperty('--border-color', e.target.value);
-        });
-        document.getElementById("cardPicker").addEventListener("input", (e) => {
-            document.documentElement.style.setProperty('--accent-color', e.target.value);
-        });
-
-        function appendOutput(text) {
-            outputDiv.innerHTML += text + "<br>";
-            outputDiv.scrollTop = outputDiv.scrollHeight;
+        // Initialize/Reset Game State
+        function initGame() {
+            attemptNum = 5;
+            terminal.innerHTML = '';
+            gameInput.disabled = false;
+            submitBtn.disabled = false;
+            gameInput.value = '';
+            gameInput.placeholder = "Guess the password...";
+            
+            logToTerminal("The Hacking Game 101", "success-text");
+            logToTerminal("This password is one word. You have five attempts to guess it correctly.\n");
         }
 
-        function displayAttempts(x) {
-            appendOutput(`You have ${x} attempts left.`);
+        // Apply customized colors dynamically
+        function changeThemeColor(property, value) {
+            document.body.classList.add('custom-theme');
+            document.documentElement.style.setProperty(property, value);
         }
 
-        function giveHint(attempt) {
-            if (attempt === 5) {
-                appendOutput("This word is a modern, funny word. Many teenagers use this word often.");
-            } else if (attempt === 4) {
-                appendOutput("This word is four letters.");
-            } else if (attempt === 3) {
-                appendOutput("The word has two of the same vowels that sit right next to each other.");
-            } else if (attempt === 2) {
-                appendOutput("The word starts with a Y.");
+        // Count specific characters logic
+        function countLetters(str, chars) {
+            let count = 0;
+            const lowerStr = str.toLowerCase();
+            for (let char of lowerStr) {
+                if (chars.includes(char)) {
+                    count++;
+                }
             }
+            return count;
         }
 
-        // Initialize Game
-        appendOutput("The Hacking Game 101");
-        appendOutput("This password is one word. You have five attempts to guess it correctly.\n");
+        function logToTerminal(text, className = '') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${className}`;
+            entry.innerText = text;
+            terminal.appendChild(entry);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
 
-        function makeGuess() {
-            if (attemptNum <= 0) return;
+        function processGuess() {
+            const guess = gameInput.value;
+            if (!guess.trim() || gameInput.disabled) return;
+            
+            gameInput.value = '';
 
-            const guess = guessInput.value.trim();
-            guessInput.value = "";
+            logToTerminal(`> Guess the password: ${guess}`);
 
-            if (!guess) return;
-
-            appendOutput(`> ${guess}`);
-
-            if (guess.toLowerCase() === secretWord) {
-                appendOutput("YOU GOT IT. YOU ARE A AWESOME HACKER!");
+            if (guess === "Yeet" || guess === "yeet") {
+                logToTerminal("YOU GOT IT. YOU ARE A AWESOME HACKER!", "success-text");
                 endGame();
                 return;
             }
 
-            attemptNum--;
+            logToTerminal("You are incorrect.", "error-text");
+            let correctLetterCount = countLetters(guess, ['y', 'e', 't']);
 
-            if (attemptNum > 0) {
-                appendOutput("You are incorrect.");
-                giveHint(attemptNum + 1);
-                displayAttempts(attemptNum);
-                appendOutput("");
-            } else {
-                appendOutput("YOU LOST YOU LAZY GOOD FOR NOTHING COUCH POTATO (im kidding bestie just play again by refreshing the page!)");
+            if (attemptNum === 5) {
+                logToTerminal(`You have ${correctLetterCount} letters correct.`);
+                logToTerminal("This word is a modern, funny word. Many teenagers use this word often.");
+                attemptNum = 4;
+                logToTerminal("You have 4 attempts left.", "system-text");
+            } else if (attemptNum === 4) {
+                logToTerminal(`You have ${correctLetterCount} letters correct.`);
+                logToTerminal("This word is four letters.");
+                attemptNum = 3;
+                logToTerminal("You have 3 attempts left.", "system-text");
+            } else if (attemptNum === 3) {
+                logToTerminal(`You have ${correctLetterCount} letters correct.`);
+                logToTerminal("The word has two of the same vowels that sit right next to each other.");
+                attemptNum = 2;
+                logToTerminal("You have 2 attempts left.", "system-text");
+            } else if (attemptNum === 2) {
+                logToTerminal(`You have ${correctLetterCount} letters correct.`);
+                logToTerminal("The word starts with a Y.");
+                attemptNum = 1;
+                logToTerminal("You have 1 attempts left.", "system-text");
+            } else if (attemptNum === 1) {
+                logToTerminal("YOU LOST YOU LAZY GOOD FOR NOTHING COUCH POTATO. THE PASSWORD WAS YEET.", "error-text");
+                attemptNum = 0;
                 endGame();
             }
         }
 
         function endGame() {
-            guessInput.disabled = true;
+            gameInput.disabled = true;
             submitBtn.disabled = true;
-            submitBtn.innerText = "Over";
+            gameInput.placeholder = "Game Over. Press Reset to try again.";
         }
 
-        // Allow pressing Enter to submit
-        guessInput.addEventListener("keypress", function(e) {
-            if (e.key === "Enter") {
-                makeGuess();
-            }
-        });
+        // Start the game loop on load
+        initGame();
     </script>
 </body>
 </html>
