@@ -8,7 +8,7 @@
         :root {
             --bg-color: #0d0d0d;
             --text-color: #00ff00;
-            --accent-color: #333333;
+            --accent-color: #1a331a;
         }
 
         body {
@@ -73,6 +73,7 @@
             white-space: pre-wrap;
             margin-bottom: 15px;
             line-height: 1.5;
+            max-height: 400px;
         }
 
         .input-line {
@@ -151,14 +152,6 @@
     const guessInput = document.getElementById("guessInput");
     const inputContainer = document.getElementById("inputContainer");
 
-    // Dynamic Hints matching your Python logic
-    const hints = [
-        () => "The word has two of the same vowels that sit right next to each other.", // 2 attempts left (Hint 3)
-        () => "The word starts with a Y.", // 1 attempt left (Hint 4)
-        () => "This word is four letters.", // 3 attempts left (Hint 2)
-        () => "This word is a modern, funny word. Many teenagers use this word often." // 4 attempts left (Hint 1)
-    ];
-
     // Print text safely to terminal window
     function printToTerminal(text) {
         outputDiv.innerText += text + "\n";
@@ -197,13 +190,13 @@
         if (attemptNum > 0) {
             // Calculate and display matching letters matching core python framework
             let count = getLetterCount(guess);
-            printToTerminal(`You have ${count} letters correct.`);
+            printToTerminal(`You have ${count} correct core letters.`);
             
             // Map remaining attempts to correct contextual hints matching original code block order
-            if (attemptNum === 4) printToTerminal("This word is a modern, funny word. Many teenagers use this word often.");
-            if (attemptNum === 3) printToTerminal("This word is four letters.");
-            if (attemptNum === 2) printToTerminal("The word has two of the same vowels that sit right next to each other.");
-            if (attemptNum === 1) printToTerminal("The word starts with a Y.");
+            if (attemptNum === 4) printToTerminal("Hint: This word is a modern, funny word. Many teenagers use this word often.");
+            if (attemptNum === 3) printToTerminal("Hint: This word is four letters.");
+            if (attemptNum === 2) printToTerminal("Hint: The word has two of the same vowels that sit right next to each other.");
+            if (attemptNum === 1) printToTerminal("Hint: The word starts with a Y.");
 
             printToTerminal(`You have ${attemptNum} attempts left.\n`);
         } else {
@@ -232,6 +225,7 @@
             root.style.setProperty('--text-color', '#ffffff');
             root.style.setProperty('--accent-color', '#222222');
         }
+        guessInput.focus();
     }
 
     // Restart Engine Initialization Block
@@ -239,20 +233,22 @@
         attemptNum = 5;
         outputDiv.innerText = "";
         inputContainer.style.display = "flex";
+        guessInput.value = "";
         guessInput.focus();
-        printToTerminal("The Hacking Game 101");
-        printToTerminal("This password is one word. You have five attempts to guess it correctly.\n");
+        printToTerminal("==================================================");
+        printToTerminal("SYSTEM INITIALIZED: The Official Hacking Game v1.0");
+        printToTerminal("==================================================\n");
     }
 
-    // Keyboard Event Listener
+    // Capture "Enter" key press on the input bar
     guessInput.addEventListener("keypress", function(event) {
         if (event.key === "Enter") {
             handleGuess();
         }
     });
 
-    // Run Game Setup On Initial Load
-    window.onload = resetGame;
+    // Run the engine instantly on script mount
+    resetGame();
 </script>
 
 </body>
