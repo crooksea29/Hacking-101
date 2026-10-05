@@ -8,318 +8,252 @@
         :root {
             --bg-color: #0d0d0d;
             --text-color: #00ff00;
-            --panel-bg: #1a1a1a;
-            --border-color: #333333;
+            --accent-color: #333333;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: 'Courier New', Courier, monospace;
-            margin: 0;
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
             transition: background-color 0.3s, color 0.3s;
         }
 
         .container {
-            width: 100%;
-            max-width: 700px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        /* Customization Panel */
-        .config-panel {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
+        /* Customization Panel Styles */
+        .controls {
+            background-color: var(--accent-color);
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid var(--text-color);
             display: flex;
-            flex-wrap: wrap;
             gap: 15px;
+            flex-wrap: wrap;
             align-items: center;
-            justify-content: space-between;
         }
 
-        .config-group {
+        .control-group {
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
         label {
-            font-size: 14px;
             font-weight: bold;
         }
 
-        input[type="color"] {
-            border: none;
-            width: 40px;
-            height: 25px;
-            cursor: pointer;
-            background: none;
-        }
-
-        select {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            padding: 4px 8px;
-            font-family: inherit;
+        input[type="color"], select {
+            background-color: #222;
+            border: 1px solid var(--text-color);
+            color: white;
+            padding: 5px;
             cursor: pointer;
         }
 
-        /* Terminal Window */
+        /* Terminal Window Styles */
         .terminal {
-            background-color: var(--bg-color);
+            background-color: rgba(0, 0, 0, 0.85);
             border: 2px solid var(--text-color);
-            border-radius: 6px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            min-height: 300px;
             display: flex;
             flex-direction: column;
-            height: 450px;
         }
 
-        .terminal-header {
-            background-color: var(--text-color);
-            color: var(--bg-color);
-            padding: 6px 12px;
-            font-weight: bold;
-            font-size: 14px;
-            letter-spacing: 1px;
-            text-align: center; /* Centered Header */
-        }
-
-        .terminal-body {
-            padding: 15px;
+        .output {
             flex-grow: 1;
             overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            font-size: 15px;
-            line-height: 1.4;
-            text-align: center; /* Centered Game Content */
-        }
-
-        .output-line {
             white-space: pre-wrap;
-            word-break: break-all;
+            margin-bottom: 15px;
+            line-height: 1.5;
         }
 
-        .input-area {
+        .input-line {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 8px;
-            margin-top: auto;
-            border-top: 1px dashed var(--border-color);
-            padding: 15px;
         }
 
         .prompt {
+            margin-right: 10px;
             font-weight: bold;
         }
 
-        input[type="text"] {
-            width: 80%;
-            max-width: 300px;
+        .guess-input {
             background: transparent;
-            border-bottom: 2px solid var(--text-color);
-            border-top: none;
-            border-left: none;
-            border-right: none;
-            color: inherit;
-            font-family: inherit;
-            font-size: 15px;
+            border: none;
+            color: var(--text-color);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            flex-grow: 1;
             outline: none;
-            text-align: center; /* Centered User Input text */
-            padding-bottom: 4px;
         }
 
-        button.action-btn {
+        button {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--text-color);
+            padding: 5px 15px;
+            cursor: pointer;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        button:hover {
             background-color: var(--text-color);
             color: var(--bg-color);
-            border: none;
-            padding: 6px 12px;
-            font-family: inherit;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        button.action-btn:hover {
-            opacity: 0.9;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Customization Settings -->
-    <div class="config-panel">
-        <div class="config-group">
-            <label for="bgColorPicker">Background:</label>
-            <input type="color" id="bgColorPicker" value="#0d0d0d">
+    <!-- Customization Settings Layout -->
+    <div class="controls">
+        <div class="control-group">
+            <label for="bgPicker">Background:</label>
+            <input type="color" id="bgPicker" value="#0d0d0d" onchange="updateBgColor(this.value)">
         </div>
         
-        <div class="config-group">
-            <label for="textColorPicker">Text Color:</label>
-            <input type="color" id="textColorPicker" value="#00ff00">
-        </div>
-
-        <div class="config-group">
-            <label for="schemeSelect">Theme Preset:</label>
-            <select id="schemeSelect">
-                <option value="custom">Custom</option>
-                <option value="matrix" selected>Classic Matrix</option>
-                <option value="cyberpunk">Cyberpunk Neon</option>
-                <option value="dracula">Dracula Dark</option>
-                <option value="retro">80s Amber</option>
+        <div class="control-group">
+            <label for="schemeSelector">Color Theme:</label>
+            <select id="schemeSelector" onchange="changeScheme(this.value)">
+                <option value="matrix">Classic Matrix (Green)</option>
+                <option value="cyberpunk">Cyberpunk (Amber/Yellow)</option>
+                <option value="mainframe">Mainframe (Cyan)</option>
+                <option value="stealth">Stealth (White)</option>
             </select>
         </div>
-
-        <button class="action-btn" id="resetGameBtn">Restart Game</button>
+        
+        <button onclick="resetGame()">Restart Game</button>
     </div>
 
-    <!-- Main Game Terminal -->
+    <!-- Terminal Board Layout -->
     <div class="terminal">
-        <div class="terminal-header">THE OFFICIAL HACKING GAME v1.0.1</div>
-        <div class="terminal-body" id="terminalBody">
-            <!-- Game output dynamically prints here -->
-        </div>
-        <div class="input-area" id="inputArea">
-            <span class="prompt">Guess the password:`</span>
-            <input type="text" id="gameInput" autofocus autocomplete="off">
+        <div class="output" id="terminalOutput"></div>
+        <div class="input-line" id="inputContainer">
+            <span class="prompt">Guess the password:&gt;</span>
+            <input type="text" id="guessInput" class="guess-input" autofocus autocomplete="off">
         </div>
     </div>
 </div>
 
 <script>
     // Game State Variables
-    let attemptsLeft = 5;
-    const targetPassword = "yeet";
+    let attemptNum = 5;
+    const password = "yeet";
+    const outputDiv = document.getElementById("terminalOutput");
+    const guessInput = document.getElementById("guessInput");
+    const inputContainer = document.getElementById("inputContainer");
 
-    // DOM Elements
-    const terminalBody = document.getElementById('terminalBody');
-    const gameInput = document.getElementById('gameInput');
-    const inputArea = document.getElementById('inputArea');
-    const resetGameBtn = document.getElementById('resetGameBtn');
-    
-    const bgColorPicker = document.getElementById('bgColorPicker');
-    const textColorPicker = document.getElementById('textColorPicker');
-    const schemeSelect = document.getElementById('schemeSelect');
+    // Dynamic Hints matching your Python logic
+    const hints = [
+        () => "The word has two of the same vowels that sit right next to each other.", // 2 attempts left (Hint 3)
+        () => "The word starts with a Y.", // 1 attempt left (Hint 4)
+        () => "This word is four letters.", // 3 attempts left (Hint 2)
+        () => "This word is a modern, funny word. Many teenagers use this word often." // 4 attempts left (Hint 1)
+    ];
 
-    // Theme Configurations
-    const themes = {
-        matrix: { bg: '#0d0d0d', text: '#00ff00' },
-        cyberpunk: { bg: '#001219', text: '#00f5d4' },
-        dracula: { bg: '#282a36', text: '#ff79c6' },
-        retro: { bg: '#221400', text: '#ffb000' }
-    };
+    // Print text safely to terminal window
+    function printToTerminal(text) {
+        outputDiv.innerText += text + "\n";
+        outputDiv.scrollTop = outputDiv.scrollHeight; // Auto-scrolls window down
+    }
 
-    // Helper functions for matching target logic
-    function countMatches(guess) {
-        const lowerGuess = guess.toLowerCase();
-        let count = 0;
-        for (let char of lowerGuess) {
-            if (['y', 'e', 't'].includes(char)) {
-                count++;
+    // Process letter-match calculation logic
+    function getLetterCount(guess) {
+        let cleanGuess = guess.toLowerCase();
+        let matchCount = 0;
+        for (let char of cleanGuess) {
+            if (char === 'y' || char === 'e' || char === 't') {
+                matchCount++;
             }
         }
-        return count;
+        return matchCount;
     }
 
-    // Print text to fake terminal terminal
-    function printLine(text) {
-        const line = document.createElement('div');
-        line.className = 'output-line';
-        line.textContent = text;
-        terminalBody.appendChild(line);
-        terminalBody.scrollTop = terminalBody.scrollHeight; // Auto-scroll
-    }
-
-    // Hints matching Python script logic perfectly
-    function giveHint(guess, level) {
-        const correctLetters = countMatches(guess);
-        printLine("You have " + correctLetters + " letters correct.");
-        
-        if (level === 1) {
-            printLine("This word is a modern, funny word. Many teenagers use this word often.");
-        } else if (level === 2) {
-            printLine("This word is four letters.");
-        } else if (level === 3) {
-            printLine("The word has two of the same vowels that sit right next to each other. ");
-        } else if (level === 4) {
-            printLine("The word starts with a Y.");
-        }
-    }
-
-    // Initialize/Reset Game Loop
-    function initGame() {
-        attemptsLeft = 5;
-        terminalBody.innerHTML = '';
-        inputArea.style.display = 'flex';
-        gameInput.value = '';
-        gameInput.focus();
-        
-        printLine("The Hacking Game 101");
-        printLine("This password is one word. You have five attempts to guess it correctly. \n");
-    }
-
-    // Handle turns dynamically
+    // Handles the core submission logic loop
     function handleGuess() {
-        const guess = gameInput.value.trim();
-        if (!guess) return;
+        let guess = guessInput.value;
+        if (!guess.trim()) return; // skip empty line enters
 
-        printLine(`Guess the password:\` ${guess}`);
-        gameInput.value = '';
+        printToTerminal(`Guess the password:> ${guess}`);
+        guessInput.value = "";
 
-        if (guess.toLowerCase() === targetPassword) {
-            printLine("YOU GOT IT. YOU ARE A AWESOME HACKER!");
-            inputArea.style.display = 'none'; // End game interaction
+        if (guess.toLowerCase() === password) {
+            printToTerminal("\nYOU GOT IT. YOU ARE AN AWESOME HACKER!");
+            inputContainer.style.display = "none"; // Hide input window
             return;
         }
 
-        // Incorrect Guess Engine
-        printLine("You are incorrect. ");
-        attemptsLeft--;
+        attemptNum--;
+        printToTerminal("You are incorrect.");
 
-        if (attemptsLeft > 0) {
-            const hintLevel = 5 - attemptsLeft;
-            giveHint(guess, hintLevel);
-            printLine("You have " + attemptsLeft + " attempts left.\n");
+        if (attemptNum > 0) {
+            // Calculate and display matching letters matching core python framework
+            let count = getLetterCount(guess);
+            printToTerminal(`You have ${count} letters correct.`);
+            
+            // Map remaining attempts to correct contextual hints matching original code block order
+            if (attemptNum === 4) printToTerminal("This word is a modern, funny word. Many teenagers use this word often.");
+            if (attemptNum === 3) printToTerminal("This word is four letters.");
+            if (attemptNum === 2) printToTerminal("The word has two of the same vowels that sit right next to each other.");
+            if (attemptNum === 1) printToTerminal("The word starts with a Y.");
+
+            printToTerminal(`You have ${attemptNum} attempts left.\n`);
         } else {
-            printLine("YOU LOST YOU LAZY GOOD FOR NOTHING COUCH POTATO. THE PASSWORD WAS YEET. ");
-            inputArea.style.display = 'none'; // End game interaction
+            printToTerminal("\nYOU LOST YOU LAZY GOOD FOR NOTHING COUCH POTATO. THE PASSWORD WAS YEET.");
+            inputContainer.style.display = "none";
         }
     }
 
-    // Event Listeners for Game Processing
-    gameInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
+    // UI Customization Functions
+    function updateBgColor(color) {
+        document.documentElement.style.setProperty('--bg-color', color);
+    }
+
+    function changeScheme(theme) {
+        const root = document.documentElement;
+        if (theme === 'matrix') {
+            root.style.setProperty('--text-color', '#00ff00');
+            root.style.setProperty('--accent-color', '#1a331a');
+        } else if (theme === 'cyberpunk') {
+            root.style.setProperty('--text-color', '#ffb000');
+            root.style.setProperty('--accent-color', '#332600');
+        } else if (theme === 'mainframe') {
+            root.style.setProperty('--text-color', '#00ffff');
+            root.style.setProperty('--accent-color', '#002626');
+        } else if (theme === 'stealth') {
+            root.style.setProperty('--text-color', '#ffffff');
+            root.style.setProperty('--accent-color', '#222222');
+        }
+    }
+
+    // Restart Engine Initialization Block
+    function resetGame() {
+        attemptNum = 5;
+        outputDiv.innerText = "";
+        inputContainer.style.display = "flex";
+        guessInput.focus();
+        printToTerminal("The Hacking Game 101");
+        printToTerminal("This password is one word. You have five attempts to guess it correctly.\n");
+    }
+
+    // Keyboard Event Listener
+    guessInput.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
             handleGuess();
         }
     });
 
-    resetGameBtn.addEventListener('click', initGame);
+    // Run Game Setup On Initial Load
+    window.onload = resetGame;
+</script>
 
-    // Color Customization Functionality
-    function updateColors(bg, text) {
-        document.documentElement.style.setProperty('--bg-color', bg);
-        document.documentElement.style.setProperty('--text-color', text);
-        bgColorPicker.value = bg;
-        textColorPicker.value = text;
-    }
-
-    bgColorPicker.addEventListener('input', (e) => {
-        document.documentElement.style.setProperty('--bg-color', e.target.value);
-        schemeSelect.value = 'custom';
-    });
-
+</body>
+</html>
