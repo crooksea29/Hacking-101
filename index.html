@@ -83,7 +83,7 @@
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
-            height: 400px;
+            height: 450px;
         }
 
         .terminal-header {
@@ -93,6 +93,7 @@
             font-weight: bold;
             font-size: 14px;
             letter-spacing: 1px;
+            text-align: center; /* Centered Header */
         }
 
         .terminal-body {
@@ -104,6 +105,7 @@
             gap: 8px;
             font-size: 15px;
             line-height: 1.4;
+            text-align: center; /* Centered Game Content */
         }
 
         .output-line {
@@ -113,11 +115,12 @@
 
         .input-area {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
             margin-top: auto;
             border-top: 1px dashed var(--border-color);
-            padding-top: 10px;
+            padding: 15px;
         }
 
         .prompt {
@@ -125,13 +128,19 @@
         }
 
         input[type="text"] {
-            flex-grow: 1;
+            width: 80%;
+            max-width: 300px;
             background: transparent;
-            border: none;
+            border-bottom: 2px solid var(--text-color);
+            border-top: none;
+            border-left: none;
+            border-right: none;
             color: inherit;
             font-family: inherit;
             font-size: 15px;
             outline: none;
+            text-align: center; /* Centered User Input text */
+            padding-bottom: 4px;
         }
 
         button.action-btn {
@@ -236,17 +245,17 @@
         terminalBody.scrollTop = terminalBody.scrollHeight; // Auto-scroll
     }
 
-    // Hints matching Python script logic
+    // Hints matching Python script logic perfectly
     function giveHint(guess, level) {
         const correctLetters = countMatches(guess);
-        printLine(`You have ${correctLetters} letters correct.`);
+        printLine("You have " + correctLetters + " letters correct.");
         
         if (level === 1) {
             printLine("This word is a modern, funny word. Many teenagers use this word often.");
         } else if (level === 2) {
             printLine("This word is four letters.");
         } else if (level === 3) {
-            printLine("The word has two of the same vowels that sit right next to each other.");
+            printLine("The word has two of the same vowels that sit right next to each other. ");
         } else if (level === 4) {
             printLine("The word starts with a Y.");
         }
@@ -261,7 +270,7 @@
         gameInput.focus();
         
         printLine("The Hacking Game 101");
-        printLine("This password is one word. You have five attempts to guess it correctly.\n");
+        printLine("This password is one word. You have five attempts to guess it correctly. \n");
     }
 
     // Handle turns dynamically
@@ -279,15 +288,15 @@
         }
 
         // Incorrect Guess Engine
-        printLine("You are incorrect.");
+        printLine("You are incorrect. ");
         attemptsLeft--;
 
         if (attemptsLeft > 0) {
             const hintLevel = 5 - attemptsLeft;
             giveHint(guess, hintLevel);
-            printLine(`You have ${attemptsLeft} attempts left.\n`);
+            printLine("You have " + attemptsLeft + " attempts left.\n");
         } else {
-            printLine("YOU LOST YOU LAZY GOOD FOR NOTHING COUCH POTATO. THE PASSWORD WAS YEET.");
+            printLine("YOU LOST YOU LAZY GOOD FOR NOTHING COUCH POTATO. THE PASSWORD WAS YEET. ");
             inputArea.style.display = 'none'; // End game interaction
         }
     }
@@ -314,13 +323,3 @@
         schemeSelect.value = 'custom';
     });
 
-    textColorPicker.addEventListener('input', (e) => {
-        document.documentElement.style.setProperty('--text-color', e.target.value);
-        schemeSelect.value = 'custom';
-    });
-
-    schemeSelect.addEventListener('change', (e) => {
-        const selected = e.target.value;
-        if (selected !== 'custom' && themes[selected]) {
-            updateColors(themes[selected].bg, themes[selected].text);
-        }
