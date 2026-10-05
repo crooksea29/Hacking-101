@@ -217,10 +217,11 @@
             gameInput.disabled = false;
             submitBtn.disabled = false;
             gameInput.value = '';
-            gameInput.placeholder = "Enter root decryption key...";
+            gameInput.placeholder = "Enter root decryption key..."
             
             logToTerminal("The Hacking Game 101", "success-text");
-            logToTerminal("This password is one word. You have five attempts to guess it correctly.\n");
+            logToTerminal("This password is one word. You have five attempts to guess it correctly.");
+            logToTerminal("Please write everything in lowercase!!\n"); // Added from your updated Python code
         }
 
         // Apply customized colors dynamically
@@ -288,9 +289,5 @@
                 logToTerminal("You have 1 attempts left.", "system-text");
             } else if (attemptNum === 1) {
                 logToTerminal("YOU LOST YOU LAZY GOOD FOR NOTHING COUCH POTATO. THE PASSWORD WAS YEET.", "error-text");
-                attemptNum = 0;
-                endGame();
-            }
-        }
 
-        function endGame() {
+            
