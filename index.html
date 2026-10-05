@@ -6,17 +6,17 @@
     <title>The Official Hacking Game</title>
     <style>
         :root {
-            --bg-color: #0d1117;
-            --text-color: #58a6ff;
-            --card-bg: #161b22;
-            --accent-color: #238636;
-            --error-color: #da3633;
+            --bg-color: #000000;
+            --text-color: #00ff33;
+            --card-bg: #050505;
+            --accent-color: #00ff33;
+            --error-color: #ff0033;
         }
 
         body.custom-theme {
-            --bg-color: var(--user-bg, #0d1117);
-            --card-bg: var(--user-card, #161b22);
-            --text-color: var(--user-text, #58a6ff);
+            --bg-color: var(--user-bg, #000000);
+            --card-bg: var(--user-card, #050505);
+            --text-color: var(--user-text, #00ff33);
         }
 
         body {
@@ -33,27 +33,30 @@
             margin: 0 auto;
             background-color: var(--card-bg);
             padding: 2rem;
-            border-radius: 12px;
-            border: 1px solid #30363d;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            border-radius: 0px; /* Completely sharp corners */
+            border: 2px solid var(--text-color);
+            box-shadow: 0 0 20px rgba(0, 255, 51, 0.2);
         }
 
         h1 {
             text-align: center;
-            color: #2ea44f;
-            border-bottom: 2px solid #30363d;
+            color: var(--text-color);
+            border-bottom: 2px solid var(--text-color);
             padding-bottom: 1rem;
             margin-top: 0;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(0, 255, 51, 0.6);
         }
 
         .customizer-box {
             display: flex;
             gap: 1rem;
-            background: rgba(255,255,255,0.05);
+            background: #0a0a0a;
             padding: 1rem;
-            border-radius: 8px;
+            border-radius: 0px; /* Completely sharp corners */
             margin-bottom: 1.5rem;
             flex-wrap: wrap;
+            border: 1px dashed var(--text-color);
         }
 
         .control-group {
@@ -67,24 +70,27 @@
         label {
             font-size: 0.85rem;
             font-weight: bold;
+            text-transform: uppercase;
         }
 
         input[type="color"] {
             width: 100%;
             height: 35px;
-            border: none;
-            border-radius: 4px;
+            border: 1px solid var(--text-color);
+            border-radius: 0px; /* Completely sharp corners */
             cursor: pointer;
+            background: none;
         }
 
         .terminal {
-            background: #010409;
+            background: #000000;
             padding: 1rem;
-            border-radius: 6px;
-            border: 1px solid #30363d;
+            border-radius: 0px; /* Completely sharp corners */
+            border: 1px solid var(--text-color);
             height: 250px;
             margin-bottom: 1.5rem;
             overflow-y: auto;
+            box-shadow: inset 0 0 10px rgba(0, 255, 51, 0.3);
         }
 
         .game-input-area {
@@ -95,41 +101,56 @@
         input[type="text"] {
             flex: 1;
             padding: 0.8rem;
-            background: #010409;
-            border: 1px solid #30363d;
+            background: #000000;
+            border: 1px solid var(--text-color);
             color: inherit;
             font-family: inherit;
             font-size: 1rem;
-            border-radius: 6px;
+            border-radius: 0px; /* Completely sharp corners */
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            box-shadow: 0 0 8px rgba(0, 255, 51, 0.5);
         }
 
         .btn {
             padding: 0.8rem 1.5rem;
-            color: #ffffff;
+            color: #000000;
             border: none;
             font-family: inherit;
             font-weight: bold;
-            border-radius: 6px;
+            border-radius: 0px; /* Completely sharp corners */
             cursor: pointer;
+            text-transform: uppercase;
         }
 
         #submit-btn {
-            background-color: var(--accent-color);
+            background-color: var(--text-color);
+            font-weight: 900;
+        }
+
+        #submit-btn:hover {
+            background-color: #00cc22;
+            box-shadow: 0 0 8px rgba(0, 255, 51, 0.5);
         }
 
         #reset-btn {
-            background-color: #21262d;
-            border: 1px solid #30363d;
+            background-color: #111111;
+            color: var(--text-color);
+            border: 1px solid var(--text-color);
         }
 
         #reset-btn:hover {
-            background-color: #30363d;
+            background-color: #222222;
         }
 
         button:disabled, input:disabled {
-            background-color: #21262d !important;
-            color: #8b949e !important;
+            background-color: #111111 !important;
+            color: #333333 !important;
+            border-color: #333333 !important;
             cursor: not-allowed;
+            box-shadow: none !important;
         }
 
         .log-entry {
@@ -137,29 +158,38 @@
             line-height: 1.4;
             white-space: pre-wrap;
         }
-        .error-text { color: var(--error-color); }
-        .success-text { color: #2ea44f; font-weight: bold; }
-        .system-text { color: #8b949e; }
+        .error-text { 
+            color: var(--error-color); 
+            text-shadow: 0 0 5px rgba(255, 0, 51, 0.5);
+        }
+        .success-text { 
+            color: var(--text-color); 
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0, 255, 51, 0.5);
+        }
+        .system-text { 
+            color: #00aa22; 
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>The Hacking Game 101</h1>
+        <h1>[ SYSTEM OVERRIDE v1.01 ]</h1>
 
         <!-- Customization Controls -->
         <div class="customizer-box">
             <div class="control-group">
-                <label>Background</label>
-                <input type="color" id="bg-picker" value="#0d1117" oninput="changeThemeColor('--user-bg', this.value)">
+                <label>Main Frame</label>
+                <input type="color" id="bg-picker" value="#000000" oninput="changeThemeColor('--user-bg', this.value)">
             </div>
             <div class="control-group">
                 <label>Terminal Box</label>
-                <input type="color" id="card-picker" value="#161b22" oninput="changeThemeColor('--user-card', this.value)">
+                <input type="color" id="card-picker" value="#050505" oninput="changeThemeColor('--user-card', this.value)">
             </div>
             <div class="control-group">
-                <label>Text Scheme</label>
-                <input type="color" id="text-picker" value="#58a6ff" oninput="changeThemeColor('--user-text', this.value)">
+                <label>Matrix Tint</label>
+                <input type="color" id="text-picker" value="#00ff33" oninput="changeThemeColor('--user-text', this.value)">
             </div>
         </div>
 
@@ -168,9 +198,9 @@
 
         <!-- Game Input Form -->
         <div class="game-input-area">
-            <input type="text" id="game-input" placeholder="Guess the password..." onkeydown="if(event.key === 'Enter') processGuess()">
-            <button id="submit-btn" class="btn" onclick="processGuess()">Submit</button>
-            <button id="reset-btn" class="btn" onclick="initGame()">Reset</button>
+            <input type="text" id="game-input" placeholder="Enter root decryption key..." onkeydown="if(event.key === 'Enter') processGuess()">
+            <button id="submit-btn" class="btn" onclick="processGuess()">Inject</button>
+            <button id="reset-btn" class="btn" onclick="initGame()">Clear</button>
         </div>
     </div>
 
@@ -187,7 +217,7 @@
             gameInput.disabled = false;
             submitBtn.disabled = false;
             gameInput.value = '';
-            gameInput.placeholder = "Guess the password...";
+            gameInput.placeholder = "Enter root decryption key...";
             
             logToTerminal("The Hacking Game 101", "success-text");
             logToTerminal("This password is one word. You have five attempts to guess it correctly.\n");
@@ -225,7 +255,7 @@
             
             gameInput.value = '';
 
-            logToTerminal(`> Guess the password: ${guess}`);
+            logToTerminal(`> ROOT@CONSOLE: ${guess}`);
 
             if (guess === "Yeet" || guess === "yeet") {
                 logToTerminal("YOU GOT IT. YOU ARE A AWESOME HACKER!", "success-text");
@@ -264,13 +294,3 @@
         }
 
         function endGame() {
-            gameInput.disabled = true;
-            submitBtn.disabled = true;
-            gameInput.placeholder = "Game Over. Press Reset to try again.";
-        }
-
-        // Start the game loop on load
-        initGame();
-    </script>
-</body>
-</html>
